@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "./components/Header";
 import '@/utils/axios.js'
+import ReduxProvider from "@/store/ReduxProvider";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
 
@@ -19,10 +20,12 @@ children: React.ReactNode;
   return (
     <html lang="en">
       <body className={`bg-gray-50  text-gray-800 ${poppins.className}`}>
-        <Header />
-        <div className="flex flex-col min-h-screen mt-12 bg-gray-50 m-auto w-full p-5 lg:max-w-5xl">
-           {children}
-        </div>
+        <ReduxProvider>
+            <Header />
+          <div className="flex flex-col min-h-screen mt-12 bg-gray-50 m-auto w-full p-5 lg:max-w-5xl">
+            {children}
+            </div>
+        </ReduxProvider>
       </body>
     </html>
   );

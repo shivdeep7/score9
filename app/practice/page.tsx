@@ -1,7 +1,29 @@
+'use client';
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import Ai from '../components/Ai';
+import { useEffect } from "react";
+import { AppUseDispatch } from "@/store/hook";
+import { ListeningQuestionsList } from "@/features/listening/listeningSlice";
 
 const Questions = () => {
+
+    const dispatch = AppUseDispatch();
+
+    useEffect(() => {
+        // Get the the list of questions
+
+        dispatch(ListeningQuestionsList({
+            "uri": "http://localhost:4000/listening/summarize-spoken-text",
+            "name": "ListeningSummarizeSpokenText"
+        }))
+
+          dispatch(ListeningQuestionsList({
+            "uri": "http://localhost:4000/listening/multiple-choice-multiple-answers",
+            "name": "MultipleChoiceMultipleAnswers"
+        }))
+          
+    }, [])
+
     return (
       <main>
             <div className="flex items-center space-x-2 mb-8">
