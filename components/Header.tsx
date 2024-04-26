@@ -1,4 +1,4 @@
-import Menu from '@/app/components/MenuComposer';
+import Menu from '@/components/MenuComposer';
 import React from 'react';
 
 

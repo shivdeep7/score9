@@ -1,9 +1,18 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
-import '@/utils/axios.js'
+import Header from "@/components/Header";
+import '@/utils/axios'
 import ReduxProvider from "@/store/ReduxProvider";
+import { createTheme, MantineProvider } from '@mantine/core';
+import '@mantine/core/styles.css';
+
+const theme = createTheme({
+   fontFamily: "Poppins",
+    primaryColor: 'gray',
+    primaryShade: 9
+  });
+
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
 
@@ -21,10 +30,13 @@ children: React.ReactNode;
     <html lang="en">
       <body className={`bg-gray-50  text-gray-800 ${poppins.className}`}>
         <ReduxProvider>
+          <MantineProvider theme={theme}>
             <Header />
-          <div className="flex flex-col min-h-screen mt-12 bg-gray-50 m-auto w-full p-5 lg:max-w-5xl">
+            <div className="flex flex-col min-h-screen mt-12 bg-gray-50 m-auto w-full p-5 lg:max-w-7xl">
             {children}
             </div>
+          </MantineProvider>
+          
         </ReduxProvider>
       </body>
     </html>

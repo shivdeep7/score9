@@ -1,16 +1,20 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, AsyncThunkPayloadCreator,AsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { QuestionsPropsTypes, QuestionsListNameType,  requestList } from "./listeningService";
-import { ListeningSummarizeSpokenTextTypes, MultipleChoiceMultipleAnswers } from "../../types/listening";
-import { Axios, AxiosResponse } from "axios";
+import { QuestionsPropsTypes, QuestionsListNameType, AxiosGetRequest } from "./listeningService";
+import { BaseListetningApiTypes, ListeningSummarizeSpokenTextTypes, MultipleChoiceMultipleAnswers } from "../../types/listening";
 
 
+/*export type QuestionTypesProps = {
+    [key in QuestionsListNameType]?: ListeningSummarizeSpokenTextTypes | MultipleChoiceMultipleAnswers;
+};*/
 
 export type QuestionTypesProps = {
-    [key in QuestionsListNameType]?: ListeningSummarizeSpokenTextTypes[] | MultipleChoiceMultipleAnswers[];
+    "ListeningSummarizeSpokenTextTypes"?: ListeningSummarizeSpokenTextTypes[]
+    "MultipleChoiceMultipleAnswers"?: MultipleChoiceMultipleAnswers[]
 };
 
 
+type SingleQuestionType = BaseListetningApiTypes & QuestionTypesProps[keyof QuestionTypesProps] 
 
 export type ListeningStateProps = { 
     isLoading: boolean, 
@@ -18,6 +22,7 @@ export type ListeningStateProps = {
     isSuccess: boolean, 
     message: string, 
     QuestionsList: QuestionTypesProps | null
+    SingleQuestion: SingleQuestionType | null
 }
 
 const initialState: ListeningStateProps = {
@@ -25,22 +30,21 @@ const initialState: ListeningStateProps = {
     isError: false, 
     isSuccess: false,
     message: "",
-    QuestionsList:  null
+    QuestionsList:  null,
+    SingleQuestion: null
 }
 
 
-type ListeningQuestionTypes = QuestionTypesProps[keyof QuestionTypesProps]
-
-type ApiResponse  = {
+type ListApiResponse  = {
     name: QuestionsListNameType;
-    data: ListeningQuestionTypes;
+    data: QuestionTypesProps;
 }
 
 // Get the list of questions from the database
-export const ListeningQuestionsList =  createAsyncThunk<ApiResponse, QuestionsPropsTypes,  { rejectValue: string }>("listening/ListeningQuestionsList", async (request, { rejectWithValue }) => {
+export const ListeningQuestionsList =  createAsyncThunk<ListApiResponse, QuestionsPropsTypes,  { rejectValue: string }>("listening/ListeningQuestionsList", async (request, { rejectWithValue }) => {
     try {
         // Get the list of the questions
-        const response = await requestList<ListeningQuestionTypes>(request.uri)
+        const response = await AxiosGetRequest<QuestionTypesProps>(request.uri)
        
          const result =  {
             data: response,
@@ -48,6 +52,21 @@ export const ListeningQuestionsList =  createAsyncThunk<ApiResponse, QuestionsPr
         } ;
         return result; 
        
+    } catch (e: any) {
+        const error = e;
+        const message = (error.response && error.response.data && error.response.data?.message || error.response.data.message.errors ) || error.message || error.toString()
+        return rejectWithValue(message)
+    }
+})
+
+type ThunkArgs = { uri: string, name: QuestionsListNameType, id: string}
+
+
+// Get the single question type
+export const SingleQuestionData = createAsyncThunk("listening/SingleQuestionData", async (request: ThunkArgs, { rejectWithValue }) => {
+    try {
+        const response = await AxiosGetRequest<SingleQuestionType>(request.uri);
+        return response;
     } catch (e: any) {
         const error = e;
         const message = (error.response && error.response.data && error.response.data?.message || error.response.data.message.errors ) || error.message || error.toString()
@@ -63,14 +82,14 @@ const listeningSlice = createSlice({
         reset: (state) => {
             return {
                 ...initialState, 
-                QuestionsList: state.QuestionsList    
+            QuestionsList: state.QuestionsList    
             }
         }
     },
     extraReducers: (builder) => {
        builder.addCase(ListeningQuestionsList.pending, (state) => {
         state.isLoading = true 
-       }).addCase(ListeningQuestionsList.fulfilled, (state, action: PayloadAction<ApiResponse>  ) => {
+       }).addCase(ListeningQuestionsList.fulfilled, (state, action: PayloadAction<ListApiResponse>  ) => {
         state.isLoading = false
         state.isError = false
         state.isSuccess = true
@@ -80,6 +99,17 @@ const listeningSlice = createSlice({
             [action.payload.name]: action.payload.data
         }
       }).addCase(ListeningQuestionsList.rejected, state => {
+        state.isLoading = false
+        state.isError = true
+        state.isSuccess = false
+       }).addCase(SingleQuestionData.pending, (state) => {
+        state.isLoading = true 
+       }).addCase(SingleQuestionData.fulfilled, (state, action: PayloadAction<SingleQuestionType>  ) => {
+        state.isLoading = false
+        state.isError = false
+        state.isSuccess = true
+        state.SingleQuestion = action.payload
+      }).addCase(SingleQuestionData.rejected, state => {
         state.isLoading = false
         state.isError = true
         state.isSuccess = false

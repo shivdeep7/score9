@@ -1,6 +1,6 @@
 import { SparklesIcon, SpeakerWaveIcon, BookOpenIcon, DocumentTextIcon  } from '@heroicons/react/24/outline'
 
-import Ai from './Ai';
+import Ai from '@/components/Ai';
 import Link from 'next/link';
 
 export interface MenuTypes {
@@ -73,6 +73,17 @@ const menuItems: MenuTypes[] = [
   {
     name: "Listening",
     Icon: SpeakerWaveIcon,
+     subMenu: [
+      {
+        name: "Summarize Spoken Text",
+        AI: true,
+        link: "/listening/Summarize-Spoken-Text",
+      },
+       {
+        name: "Multiple Choice",
+        link: "/listening/multiple-choice/questions/1",
+      }
+    ],
   },
   {
     name: "Reading",
