@@ -1,4 +1,4 @@
-export interface BaseListetningApiTypes {
+export interface BaseApiTypes {
     id: number; 
     questionName: string;
     title: string; 
@@ -22,11 +22,11 @@ export interface MultipleChoiceOptionsTypes {
     question_id: number;
 }
 
-export interface ListeningSummarizeSpokenTextTypes extends BaseListetningApiTypes { 
+export interface ListeningSummarizeSpokenText extends BaseApiTypes { 
 
 }
 
-export interface MultipleChoiceMultipleAnswers  extends BaseListetningApiTypes  {
+export interface MultipleChoiceMultipleAnswers  extends BaseApiTypes  {
     question: string;
     options: MultipleChoiceOptionsTypes[];
 }

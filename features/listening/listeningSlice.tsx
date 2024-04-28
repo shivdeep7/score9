@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk, AsyncThunkPayloadCreator,AsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { QuestionsPropsTypes, QuestionsListNameType, AxiosGetRequest } from "./listeningService";
-import { BaseListetningApiTypes, ListeningSummarizeSpokenTextTypes, MultipleChoiceMultipleAnswers } from "../../types/listening";
+import { QuestionsPropsTypes } from "./listeningService";
+import { AxiosGetRequest } from "@/utils/AxiosGetRequest";
+import { BaseApiTypes, ListeningSummarizeSpokenText, MultipleChoiceMultipleAnswers } from "../../types/listening";
 
 
 /*export type QuestionTypesProps = {
@@ -9,12 +10,20 @@ import { BaseListetningApiTypes, ListeningSummarizeSpokenTextTypes, MultipleChoi
 };*/
 
 export type QuestionTypesProps = {
-    "ListeningSummarizeSpokenTextTypes"?: ListeningSummarizeSpokenTextTypes[]
-    "MultipleChoiceMultipleAnswers"?: MultipleChoiceMultipleAnswers[]
+    "ListeningSummarizeSpokenText"?: ListeningSummarizeSpokenText[]
+    "MultipleChoiceMultipleAnswers"?: MultipleChoiceMultipleAnswers[],
+    "MultipleChoiceSingleAnswer"?: MultipleChoiceMultipleAnswers[],
+    "FillIntheBlanks"?: MultipleChoiceMultipleAnswers[],
+    "HighlightCorrectSummary"?: MultipleChoiceMultipleAnswers[],
+    "SelectMissingWord"?: MultipleChoiceMultipleAnswers[],
+    "HighlightIncorrectWords"?: MultipleChoiceMultipleAnswers[],
+    "WriteFromDictation"?: MultipleChoiceMultipleAnswers[],
 };
 
+export type QuestionsListNameType = keyof QuestionTypesProps;
 
-type SingleQuestionType = BaseListetningApiTypes & QuestionTypesProps[keyof QuestionTypesProps] 
+
+type SingleQuestionType = BaseApiTypes & QuestionTypesProps[keyof QuestionTypesProps] 
 
 export type ListeningStateProps = { 
     isLoading: boolean, 
@@ -49,7 +58,7 @@ export const ListeningQuestionsList =  createAsyncThunk<ListApiResponse, Questio
          const result =  {
             data: response,
             name: request.name
-        } ;
+        };
         return result; 
        
     } catch (e: any) {
@@ -93,16 +102,15 @@ const listeningSlice = createSlice({
         state.isLoading = false
         state.isError = false
         state.isSuccess = true
-        console.log(action.payload)
         state.QuestionsList = {
             ...state.QuestionsList,
             [action.payload.name]: action.payload.data
         }
-      }).addCase(ListeningQuestionsList.rejected, state => {
+      }).addCase(ListeningQuestionsList.rejected, (state) => {
         state.isLoading = false
         state.isError = true
         state.isSuccess = false
-       }).addCase(SingleQuestionData.pending, (state) => {
+    }).addCase(SingleQuestionData.pending, (state) => {
         state.isLoading = true 
        }).addCase(SingleQuestionData.fulfilled, (state, action: PayloadAction<SingleQuestionType>  ) => {
         state.isLoading = false
