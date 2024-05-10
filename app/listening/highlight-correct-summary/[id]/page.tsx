@@ -4,7 +4,6 @@ import QuestionHeader from "@/components/QuestionHeader";
 import TextContentArea from "@/components/TestContentArea";
 import { SingleQuestionData, reset } from "@/features/listening/listeningSlice";
 import { AppUseDispatch, AppUseSelector } from "@/store/hook";
-import { MultipleChoiceOptionsTypes } from "@/types/listening";
 import { useParams } from 'next/navigation'
 import { useEffect } from "react";
 

@@ -2,46 +2,15 @@ import { BaseApiTypes } from "@/types/listening";
 import { AxiosGetRequest } from "@/utils/AxiosGetRequest";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 
-
-export interface MultipleChoiceMultipleAnswer extends BaseApiTypes {
-    options: {
-        "id": number,
-        "index": number,
-        "correct": number,
-        "options": string,
-        "created_at": Date,
-        "updated_at": Date,
-        "question_id": number
-    },
-    correctAnswers: {
-        [id: string]: string
-    }
-}
-
-export interface MultipleChoiceSingleAnswer extends BaseApiTypes {
-    options: {
-        "id": number,
-        "index": number,
-        "correct": number,
-        "options": string,
-        "created_at": Date,
-        "updated_at": Date,
-        "question_id": number
-    },
-    correctAnswers: {
-        [id: string]: string
-    }
-}
+export interface SummerizeWrittenTextType extends BaseApiTypes {}
+export interface WrittenEassyType extends BaseApiTypes {}
 
 export interface QuestionListType {    
-    "MultipleChoiceSingleAnswer"?: MultipleChoiceSingleAnswer[],
-    "MultipleChoiceMultipleAnswer"?: MultipleChoiceMultipleAnswer[],
-    "ReadingReOrderParagraphs"?: MultipleChoiceSingleAnswer[],
-    "RFillIntheBlanks"?: MultipleChoiceSingleAnswer[],
-    "RWFillInTheBlanks"?: MultipleChoiceMultipleAnswer[],
+    SummerizeWrittenText?: SummerizeWrittenTextType[],
+    WrittenEssay?: WrittenEassyType[],
 }
 
-export type SingleQuestionType = QuestionListType[keyof QuestionListType];
+export type SingleQuestionType =  BaseApiTypes
 export type QuestionsListNameType = keyof QuestionListType;
 
 interface initalStateTypes {
@@ -76,7 +45,7 @@ export interface ApiResponseType {
 
 
 // Get the list of reading questions
-export const readingQuestionList = createAsyncThunk<ApiResponseType, ApiRequestType,{ rejectValue: string }>("reading/QuestionsList", async (request, { rejectWithValue }) => {
+export const writingQuestionList = createAsyncThunk<ApiResponseType, ApiRequestType,{ rejectValue: string }>("reading/QuestionsList", async (request, { rejectWithValue }) => {
     try {
         const response = await AxiosGetRequest<QuestionListType>(request.uri);
         const result =  {
@@ -91,7 +60,7 @@ export const readingQuestionList = createAsyncThunk<ApiResponseType, ApiRequestT
 })
 
 // Get the single question 
-const SingleQuestionData = createAsyncThunk<SingleQuestionType, {uri: string}, {rejectValue: string}>("reading/SingleQuestionData", async (request, {rejectWithValue}) => {
+export const SingleQuestionData = createAsyncThunk<SingleQuestionType, {uri: string}, {rejectValue: string}>("reading/SingleQuestionData", async (request, {rejectWithValue}) => {
     try {
         const response = await AxiosGetRequest<SingleQuestionType>(request.uri);
         return response; 
@@ -111,9 +80,9 @@ const readingSlice = createSlice({
         }
     },
     extraReducers: builder => {
-        builder.addCase(readingQuestionList.pending, (state, action) => {
+        builder.addCase(writingQuestionList.pending, (state, action) => {
             state.isLoading = true
-        }).addCase(readingQuestionList.fulfilled, (state, action: PayloadAction<ApiResponseType>) => {
+        }).addCase(writingQuestionList.fulfilled, (state, action: PayloadAction<ApiResponseType>) => {
             state.isLoading = false
             state.isError = false
             state.isSuccess = true 
@@ -121,7 +90,19 @@ const readingSlice = createSlice({
                 ...state.QuestionsList, 
                 [action.payload.name]: action.payload.data
             }
-        }).addCase(readingQuestionList.rejected, (state, action: PayloadAction<string | undefined>) => {
+        }).addCase(writingQuestionList.rejected, (state, action: PayloadAction<string | undefined>) => {
+            state.isLoading = false 
+            state.isError = true 
+            state.isSuccess = false 
+            state.message = action.payload;
+        }).addCase(SingleQuestionData.pending, (state, action) => {
+            state.isLoading = true
+        }).addCase(SingleQuestionData.fulfilled, (state, action: PayloadAction<SingleQuestionType>) => {
+            state.isLoading = false
+            state.isError = false
+            state.isSuccess = true 
+            state.SingleQuestion = action.payload
+        }).addCase(SingleQuestionData.rejected, (state, action: PayloadAction<string | undefined>) => {
             state.isLoading = false 
             state.isError = true 
             state.isSuccess = false 

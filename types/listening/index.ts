@@ -9,7 +9,8 @@ export interface BaseApiTypes {
     createdAt: Date; 
     updatedAt: Date; 
     question?: string;
-    options?: any
+    options?: any;
+     paragraphs?: any
 }
 
 export interface MultipleChoiceOptionsTypes {

@@ -1,19 +1,21 @@
 'use client';
 import CountDown from "@/components/CountDown.js";
 import QuestionHeader from "@/components/QuestionHeader";
+import QuestionFooter from "@/components/QuestionsFooter";
 import TextContentArea from "@/components/TestContentArea";
 import { SingleQuestionData, reset } from "@/features/listening/listeningSlice";
 import { AppUseDispatch, AppUseSelector } from "@/store/hook";
 import { MultipleChoiceOptionsTypes } from "@/types/listening";
 import { useParams } from 'next/navigation'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const SummariseSpokenText = () => {
 
     const params = useParams<{id: string}>();
     const dispatch =  AppUseDispatch();
     const { isLoading, SingleQuestion } = AppUseSelector(state => state.listening)
-
+    const [answer, setAnswer] = useState<string>("");
+    console.log(answer);
     useEffect(() => {
 
         dispatch(SingleQuestionData({
@@ -22,6 +24,11 @@ const SummariseSpokenText = () => {
             name: "ListeningSummarizeSpokenText"
         }))
     }, [params.id])
+
+
+    const handleOptionChange = (option: string) => {
+        setAnswer(option)
+    }
 
     return !isLoading && (
       <main>
@@ -41,8 +48,8 @@ const SummariseSpokenText = () => {
                 {
                     SingleQuestion?.options?.map((current: MultipleChoiceOptionsTypes) => {
                         return (
-                            <div className="p-2 space-x-1">
-                                <input type="radio" name="answer" className="border border-red-200" />
+                            <div className="p-2 space-x-1" key={current?.options}>
+                                <input type="radio" name="answer" className="border border-red-200" onChange={() => handleOptionChange(current?.options)} />
                                 <span>{current?.options}</span>
                             </div>
                         )
@@ -50,6 +57,7 @@ const SummariseSpokenText = () => {
                 }
             </TextContentArea>
         </div>
+        <QuestionFooter currentPage={params.id} disabled={answer != "" ? false: true } /> 
      </main>
     )
 }

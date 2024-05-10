@@ -12,7 +12,6 @@ const CountDown = ({ seconds }) => {
   useEffect(() => {
     intervalId.current = setInterval(() => {
       // If the current seconds is 0 and minutes is not set the seconds to 59
-      console.log(currentSeconds, currentMinutes);
       if (currentSeconds == 0 && currentMinutes != 0) {
         setCurrentMinutes((state) => state - 1);
         setCurrentSeconds(59);

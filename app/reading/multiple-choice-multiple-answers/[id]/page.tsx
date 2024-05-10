@@ -1,42 +1,26 @@
 'use client';
 import CountDown from "@/components/CountDown.js";
 import QuestionHeader from "@/components/QuestionHeader";
+import QuestionFooter from "@/components/QuestionsFooter";
 import TextContentArea from "@/components/TestContentArea";
-import { SingleQuestionData, reset } from "@/features/listening/listeningSlice";
+import {  readingSingleQuestionData } from "@/features/reading/readingSlice";
 import { AppUseDispatch, AppUseSelector } from "@/store/hook";
+import { MultipleChoiceOptionsTypes } from "@/types/listening";
 import { useParams } from 'next/navigation'
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-const SelectedWordClass = 'bg-red-300 '
+const MultipleChoiceMultipleAnswers = () => {
 
-const SummariseSpokenText = () => {
     const params = useParams<{id: string}>();
     const dispatch =  AppUseDispatch();
-    const [answer, setAnswer] = useState<number[]>([])
-    const { isLoading, SingleQuestion } = AppUseSelector(state => state.listening)
-
+    const { isLoading, isError, SingleQuestion } = AppUseSelector(state => state.reading)
 
     useEffect(() => {
 
-        dispatch(SingleQuestionData({
-            uri:  `/listening/highlight-incorrect-words/${params.id}`,
-            id: params.id,
-            name: "HighlightIncorrectWords"
+        dispatch(readingSingleQuestionData({
+            uri:  `/reading/multiple-choice-multiple-answers/${params.id}`,
         }))
     }, [params.id])
-
-    const onWordClick = (index: number) => {
-       const pos = answer.indexOf(index);
-       const newAnswer = [...answer];   
-
-       if (pos != -1) { 
-        newAnswer.splice(pos, 1) 
-       } else {
-        newAnswer.push(index) 
-       }
-
-       return setAnswer(newAnswer)
-    }
 
     return !isLoading && (
       <main>
@@ -51,23 +35,23 @@ const SummariseSpokenText = () => {
             <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
                  <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
             </div>
-            <TextContentArea className="mt-10 text-lg font-[300]  flex flex-wrap">
+            <TextContentArea className="mt-10">
+                <span className="text-lg font-[500] m-2 mb-3 ">{SingleQuestion?.question}</span>
                 {
-                    SingleQuestion?.answer.split(" ").map((word, index: number) => {
-                                                   
-
+                    SingleQuestion?.options?.map((current: MultipleChoiceOptionsTypes) => {
                         return (
-                         <span key={index} className={`py-2 px-1 cursor-pointer ${answer.indexOf(index) != -1 && SelectedWordClass}`} onClick={() => {
-                            onWordClick(index)
-                         }}>{word}</span>
+                            <div className="p-2 space-x-1">
+                                <input type="checkbox" />
+                                <span>{current?.options}</span>
+                            </div>
                         )
-                     })
+                    })
                 }
-               
             </TextContentArea>
         </div>
+        <QuestionFooter currentPage={params.id} />
      </main>
     )
 }
 
-export default SummariseSpokenText;
+export default MultipleChoiceMultipleAnswers;

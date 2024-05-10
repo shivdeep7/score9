@@ -94,7 +94,7 @@ const MultipleChoice = () => {
             <div className="flex items-center  mb-8">
                     <span className="text-2xl font-[600]">Listening - {MapQuestionsTypesToUrl[params.type]["title"]}</span>
             </div>
-            <div className="grid grid-cols-4 gap-4 ">
+     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 
             {
              

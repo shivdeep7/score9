@@ -1,57 +1,60 @@
-import { SparklesIcon, SpeakerWaveIcon, BookOpenIcon, DocumentTextIcon  } from '@heroicons/react/24/outline'
+import {
+  SparklesIcon,
+  SpeakerWaveIcon,
+  BookOpenIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 
-import Ai from '@/components/Ai';
-import Link from 'next/link';
+import Ai from "@/components/Ai";
+import Link from "next/link";
 
 export interface MenuTypes {
   name: String;
   Icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   AI?: Boolean;
   onPress?: () => void;
-  subMenu?:  SubMenuTypes[];
+  subMenu?: SubMenuTypes[];
 }
 
 interface SubMenuTypes extends MenuTypes {
-    link?: any;
+  link?: any;
 }
-
-
-
 
 const MenuContent = (item: SubMenuTypes) => {
   return (
     <div className="menu-link dropdown dropdown-hover mr-5 ">
-       <div
-          role="button"
-          className="flex flex-row items-center space-x-1 m-1 font-[500]"
-        >
-          {item.Icon && <item.Icon className=" h-6 w-6" />}
-          <span>{item.name}</span>
-          {item.AI && <Ai />}
-        </div>
-        {item.subMenu && (
-          <ul className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-[300px]">
-            {
-                item.subMenu.map((subItem) => {
-                    return (
-                      <Link href={subItem.link} className="p-3 border-b border-zinc-100">
-                         <MenuContent {...subItem} />
-                      </Link>
-                    )
-              })
-            }
-          </ul>
-        )}
+      <div
+        role="button"
+        className="m-1 flex flex-row items-center space-x-1 font-[500]"
+      >
+        {item.Icon && <item.Icon className=" h-6 w-6" />}
+        <span>{item.name}</span>
+        {item.AI && <Ai />}
+      </div>
+      {item.subMenu && (
+        <ul className="dropdown-content menu bg-base-100 rounded-box z-[1] w-[300px] p-2 shadow">
+          {item.subMenu.map((subItem, index) => {
+            return (
+              <Link
+                href={subItem.link}
+                key={index}
+                className="border-b border-zinc-100 p-3"
+              >
+                <MenuContent {...subItem} />
+              </Link>
+            );
+          })}
+        </ul>
+      )}
     </div>
-  )
-}
+  );
+};
 
 const MenuComposer = (menu: MenuTypes[]) => {
   return menu.map((item, index) => {
-   return <MenuContent {...item} />
+    return <MenuContent {...item} key={index} />;
   });
 };
-
 
 const menuItems: MenuTypes[] = [
   {
@@ -60,54 +63,69 @@ const menuItems: MenuTypes[] = [
     AI: true,
     subMenu: [
       {
-        name: "Read Aloud",
+        name: "Answer short question",
         AI: true,
-        link: "/practice",
+        link: "/speaking/practice/answer-short-question/1",
       },
       {
-        name: "Read Aloud",
+        name: "Describe Image",
         AI: true,
-        link: "https://google.com",
+        link: "/speaking/practice/describe-image/1",
+      },
+      {
+        name: "Read aloud",
+        AI: true,
+        link: "/speaking/practice/read-aloud/1",
+      },
+      {
+        name: "Repeat Sentence",
+        AI: true,
+        link: "/speaking/practice/repeat-sentence/1",
+      },
+      {
+        name: "Retel Lecture",
+        AI: true,
+        link: "/speaking/practice/retel-lecture/1",
       },
     ],
   },
   {
     name: "Listening",
     Icon: SpeakerWaveIcon,
-     subMenu: [
+    subMenu: [
       {
         name: "Summarize Spoken Text",
         AI: true,
         link: "/listening/practice/summerize-spoken-types/1",
       },
-       {
+      {
         name: "Multiple Choice",
         link: "/listening/practice/multiple-choice/1",
       },
-        {
+      {
         name: "Multiple Choice Single Answer",
         link: "/listening/practice/multiple-choice-single-answer/1",
       },
-         {
+      {
         name: "Fill in the blanks",
         link: "/listening/practice/fill-in-the-blanks/1",
       },
-       {
+      {
         name: "Hightlight Correct Summary",
         link: "/listening/practice/highlist-correct-summary/1",
       },
-        {
+      {
         name: "Select missing word",
         link: "/listening/practice/select-missing-word/1",
       },
-       {
+      {
         name: "Hightlist incorrect word",
         link: "/listening/practice/highlight-incorrect-words/1",
       },
-         {
+      {
         name: "Write form Dictation",
         link: "/listening/practice/write-form-dictation/1",
-      }
+      },
     ],
   },
   {
@@ -118,43 +136,45 @@ const menuItems: MenuTypes[] = [
         name: "Multiple choice multiple answers",
         link: "/reading/practice/multiple-choice-multiple-answers/1",
       },
-        {
-       name: "Multiple choice single answers",
-       link: "/reading/practice/multiple-choice-single-answers/1",
-
+      {
+        name: "Multiple choice single answers",
+        link: "/reading/practice/multiple-choice-single-answer/1",
       },
-       {
-       name: "Reading re order paragraphs",
-       link: "/reading/practice/reading-re-order-paragraphs/1",
-
+      {
+        name: "Reading re order paragraphs",
+        link: "/reading/practice/reading-re-order-paragraphs/1",
       },
-       {
-       name: "Reading fill in the blanks",
-       link: "/reading/practice//reading-fill-in-the-blanks/1",
-
+      {
+        name: "Reading fill in the blanks",
+        link: "/reading/practice//reading-fill-in-the-blanks/1",
       },
-       {
-       name: "reading and writing fill in the blanks",
-      link: "/reading/practice/reading-and-writing-fill-in-the-blanks/1",
-
-      }
-    ]
+      {
+        name: "reading and writing fill in the blanks",
+        link: "/reading/practice/reading-and-writing-fill-in-the-blanks/1",
+      },
+    ],
   },
   {
     name: "Writing",
     Icon: DocumentTextIcon,
+    AI: true,
+    subMenu: [
+      {
+        name: "Summerize Written text",
+        AI: true,
+        link: "/writing/practice/summerize-written-text/1",
+      },
+      {
+        name: "Written Essay",
+        AI: true,
+        link: "/writing/practice/written-essay/1",
+      },
+    ],
   },
 ];
 
-
- const Menu = () => {
-  
-  return (
-    <div>
-      {MenuComposer(menuItems)}
-    </div>
-  )
-}
-
+const Menu = () => {
+  return <div>{MenuComposer(menuItems)}</div>;
+};
 
 export default Menu;

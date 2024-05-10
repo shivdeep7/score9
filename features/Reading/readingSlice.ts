@@ -18,6 +18,22 @@ export interface MultipleChoiceMultipleAnswer extends BaseApiTypes {
     }
 }
 
+
+export interface ReadingReOrderParagraphsTypes extends BaseApiTypes {
+    paragraphs: {
+       "id": number,
+        "index": number,
+        "correct": number,
+        "options": string,
+        "created_at": Date,
+        "updated_at": Date,
+        "question_id": number
+    },
+      correctAnswers: {
+        [id: string]: string
+    }
+}
+
 export interface MultipleChoiceSingleAnswer extends BaseApiTypes {
     options: {
         "id": number,
@@ -29,19 +45,19 @@ export interface MultipleChoiceSingleAnswer extends BaseApiTypes {
         "question_id": number
     },
     correctAnswers: {
-        [id: string]: string
+    [id: string]: string
     }
 }
 
 export interface QuestionListType {    
     "MultipleChoiceSingleAnswer"?: MultipleChoiceSingleAnswer[],
     "MultipleChoiceMultipleAnswer"?: MultipleChoiceMultipleAnswer[],
-    "ReadingReOrderParagraphs"?: MultipleChoiceSingleAnswer[],
+    "ReadingReOrderParagraphs"?: ReadingReOrderParagraphsTypes[],
     "RFillIntheBlanks"?: MultipleChoiceSingleAnswer[],
     "RWFillInTheBlanks"?: MultipleChoiceMultipleAnswer[],
 }
 
-export type SingleQuestionType = QuestionListType[keyof QuestionListType];
+export type SingleQuestionType = BaseApiTypes & QuestionListType[keyof QuestionListType];
 export type QuestionsListNameType = keyof QuestionListType;
 
 interface initalStateTypes {
@@ -91,7 +107,7 @@ export const readingQuestionList = createAsyncThunk<ApiResponseType, ApiRequestT
 })
 
 // Get the single question 
-const SingleQuestionData = createAsyncThunk<SingleQuestionType, {uri: string}, {rejectValue: string}>("reading/SingleQuestionData", async (request, {rejectWithValue}) => {
+export const readingSingleQuestionData = createAsyncThunk<SingleQuestionType, {uri: string}, {rejectValue: string}>("reading/SingleQuestionData", async (request, {rejectWithValue}) => {
     try {
         const response = await AxiosGetRequest<SingleQuestionType>(request.uri);
         return response; 
@@ -122,6 +138,18 @@ const readingSlice = createSlice({
                 [action.payload.name]: action.payload.data
             }
         }).addCase(readingQuestionList.rejected, (state, action: PayloadAction<string | undefined>) => {
+            state.isLoading = false 
+            state.isError = true 
+            state.isSuccess = false 
+            state.message = action.payload;
+        }).addCase(readingSingleQuestionData.pending, (state, action) => {
+            state.isLoading = true
+        }).addCase(readingSingleQuestionData.fulfilled, (state, action: PayloadAction<SingleQuestionType>) => {
+            state.isLoading = false
+            state.isError = false
+            state.isSuccess = true 
+            state.SingleQuestion = action.payload;
+        }).addCase(readingSingleQuestionData.rejected, (state, action: PayloadAction<string | undefined>) => {
             state.isLoading = false 
             state.isError = true 
             state.isSuccess = false 

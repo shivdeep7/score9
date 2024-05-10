@@ -22,7 +22,7 @@ const MapQuestionsTypesToUrl: MapQuestionsTypesToUrlTypes = {
         uri: "/reading/multiple-choice-multiple-answers",
         title: "Multiple choice multiple answer"
     },
-     "multiple-choice-single-answers": {
+     "multiple-choice-single-answer": {
         name: "MultipleChoiceSingleAnswer",
         uri: "/reading/multiple-choice-single-answer",
         title: "Multiple choice Single answer"
@@ -51,7 +51,6 @@ const ReadingQuestionList = () => {
     const params = useParams<{type: string, page: string}>();
     const router = useRouter();
 
-    
 
     useEffect(() => {
          if ( MapQuestionsTypesToUrl[params.type] === undefined ) {
@@ -72,7 +71,7 @@ const ReadingQuestionList = () => {
              <div className="flex items-center  mb-8">
                     <span className="text-2xl font-[600]">Reading - {MapQuestionsTypesToUrl[params.type]?.["title"]}</span>
             </div>
-         <div className="grid grid-cols-4 gap-4 ">
+     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
             {  QuestionsList?.[MapQuestionsTypesToUrl[params.type].name]?.slice(totalPagesMemo.start, totalPagesMemo.end).map((question) => {
                 return (
                     <QuestionCard key={question.id} url={MapQuestionsTypesToUrl[params.type].uri} question={question} />
