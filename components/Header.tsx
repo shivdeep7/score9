@@ -6,7 +6,7 @@ import React from 'react';
 
 const Header = () => {
     return (
-    <header className="flex w-full p-2 bg-orange-50">
+    <header className="flex w-full p-2 z-[20px]">
       <nav className="flex flex-row m-auto w-full lg:max-w-7xl justify-between items-center space-x-2">
       <div className="flex flex-row items-center ">
         <Link href="/dashboard"><span className="bg-orange-600 font-bold text-2xl bg-clip-text text-transparent mr-3">Score9</span></Link>
