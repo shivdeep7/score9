@@ -16,7 +16,7 @@ export interface QuestionListType {
   RetelLecture?: RetelLecture[];
 }
 
-export type SingleQuestionType = QuestionListType[keyof QuestionListType];
+export type SingleQuestionType =  BaseApiTypes & QuestionListType[keyof QuestionListType];
 export type QuestionsListNameType = keyof QuestionListType;
 
 interface initalStateTypes {
@@ -119,7 +119,19 @@ const readingSlice = createSlice({
           state.isSuccess = false;
           state.message = action.payload;
         },
-      );
+      ).addCase(SingleQuestionData.pending, (state, action) => {
+            state.isLoading = true
+        }).addCase(SingleQuestionData.fulfilled, (state, action: PayloadAction<SingleQuestionType>) => {
+            state.isLoading = false
+            state.isError = false
+            state.isSuccess = true 
+            state.SingleQuestion = action.payload;
+        }).addCase(SingleQuestionData.rejected, (state, action: PayloadAction<string | undefined>) => {
+            state.isLoading = false 
+            state.isError = true 
+            state.isSuccess = false 
+            state.message = action.payload;
+        })
   },
 });
 

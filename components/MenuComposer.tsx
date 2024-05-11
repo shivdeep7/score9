@@ -25,10 +25,10 @@ const MenuContent = (item: SubMenuTypes) => {
     <div className="menu-link dropdown dropdown-hover mr-5 ">
       <div
         role="button"
-        className="m-1 flex flex-row items-center space-x-1 font-[500]"
+        className="flex flex-row items-center space-x-1 text-sm font-[400]"
       >
-        {item.Icon && <item.Icon className=" h-6 w-6" />}
-        <span>{item.name}</span>
+       
+        <span className="text-md font-[poppins] font-[500]">{item.name}</span>
         {item.AI && <Ai />}
       </div>
       {item.subMenu && (
@@ -174,7 +174,7 @@ const menuItems: MenuTypes[] = [
 ];
 
 const Menu = () => {
-  return <div>{MenuComposer(menuItems)}</div>;
+  return <div className="ml-10">{MenuComposer(menuItems)}</div>;
 };
 
 export default Menu;

@@ -2,46 +2,47 @@
 import { MicrophoneIcon } from "@heroicons/react/24/solid"
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 
-type MediaRecordingStatusTypes = "recording" | "inactive" | "stopped";
-type TimerTypes = {time: number, percentage: number}
 
-const AudioRecorder = ({time, className}: {className: String, time: number}) => {
+export type TimerTypes = {time: number, percentage: number}
 
-    const percentageDecrement = useMemo(() => (100 / time), [time])
+const AudioRecorder = ({seconds, setTime, time, className, setRecordingState}: {seconds: number, className: string, time: TimerTypes, setTime: React.Dispatch<React.SetStateAction<TimerTypes>>, setRecordingState:  React.Dispatch<React.SetStateAction<boolean>> }) => {
+
+    const percentageDecrement = useMemo(() => (100 / time.time), [time.time])
     const [browserPermission, setBrowserPermision] = useState<boolean>(true)
     const mediaRecorderRef = useRef<MediaRecorder>({} as MediaRecorder)
     const timeOutRef = useRef<NodeJS.Timeout | undefined>();
-    const [mediaStream, setMediaStream] = useState<MediaStream | undefined>({} as MediaStream);
     const [audioChunks, setAudioChunks] = useState<Blob[] | undefined>()
     const [audio, setAudio] = useState<string | undefined>();
-    const [timer, setTimer] = useState<TimerTypes>({time: time, percentage: 100});
+    const player = useRef<HTMLAudioElement>({} as HTMLAudioElement);
 
 
     useEffect(() => {
         
-
-        if ( timer.time < 0) {
+        if ( time.time < 0) {
           mediaRecorderRef.current && mediaRecorderRef.current.state == "recording" && stopRecording()
-          
         }
 
-    }, [timer])
+    }, [time.time])
 
     // Stop audio recording
     const stopRecording = async () => {
       
 
-        setTimer({
-            time: time, 
+        setTime({
+            time: seconds, 
             percentage: 100
           })
+
         clearTimeout(timeOutRef.current);
         mediaRecorderRef.current.stop();
          // On Audio stop
         mediaRecorderRef.current.onstop = async () => {
-          const audioWavFile = new Blob(audioChunks, { type: "audio/mp4" });
+          const audioWavFile = new Blob(audioChunks, { type: "audio/mp3" });
           const audioUrl = URL.createObjectURL(audioWavFile);
+          setRecordingState(false)
           setAudio(audioUrl)
+         console.log(audioWavFile)
+        
           setAudioChunks([]); // Clear the audio chunks 
         }
 
@@ -49,7 +50,7 @@ const AudioRecorder = ({time, className}: {className: String, time: number}) => 
 
     const countdown = useCallback(() => {
          timeOutRef.current = setInterval(() => {
-            setTimer(prevState => {
+            setTime(prevState => {
                return {
                     time: prevState.time -1, 
                     percentage: prevState.percentage - percentageDecrement
@@ -60,7 +61,8 @@ const AudioRecorder = ({time, className}: {className: String, time: number}) => 
 
     // Start audio recording 
     const startRecording = async () => {
-       
+        
+        setAudio(undefined)
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -73,6 +75,8 @@ const AudioRecorder = ({time, className}: {className: String, time: number}) => 
 
         // Start the media recording
         mediaRecorderRef.current.start()
+        setRecordingState(true)
+
 
         mediaRecorderRef.current.onstart = () => {
             countdown();
@@ -102,9 +106,12 @@ const AudioRecorder = ({time, className}: {className: String, time: number}) => 
         if ( recordingStatus !== "recording") {
            return startRecording()
         } 
+
+
        return stopRecording() // Otherwise stop the recording
 
     }
+
 
 
 
@@ -133,17 +140,15 @@ const AudioRecorder = ({time, className}: {className: String, time: number}) => 
             </div>
         </div>
 
-        {
-            mediaRecorderRef.current.state == "recording" && <div className="radial-progress" style={{"--value":timer.percentage}} role="progressbar">{timer.time}</div>
-        }
-            {audio ? (
-        <div className="audio-container">
-            <audio src={audio} controls></audio>
-            <a download href={audio}>
-                Download Recording
-            </a>
-        </div>
-        ) : null}
+      
+           {audio && (
+    <div className="audio-container flex flex-1  ">
+        <audio src={audio} controls ref={player}   />
+        <a download href={audio}>
+            Download Recording
+        </a>
+    </div>
+)}
         </>
        
     )

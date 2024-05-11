@@ -1,20 +1,34 @@
+'use client';
+import Link from "next/link";
+import CountDown from "./CountDown";
+import { useState } from "react";
+
 interface QuestionHeaderPropsTypes {
     initial: string; 
     title: string;
     description: string;
 }
 
-const QuestionHeader = ({initial, title, description}: QuestionHeaderPropsTypes) => {
+const QuestionHeader = ({
+    countdown
+}: {countdown: number}) => {
+
+    const [progress, setProgress] = useState<number>(0)
+
     return (
-         <div className="flex flex-row w-full space-x-3 border-b border-zinc-200 pb-6 justify-center items-center ">
-            <div className=" bg-red-500 rounded-full text-white p-4">
-                <span>{initial}</span>
+        <div className="absolute top-0  bg-white w-full border-b border-zinc-200">
+            <div>
+            <div className="w-full m-auto lg:max-w-6xl flex justify-between items-center p-4">
+                 <Link href="/dashboard"><span className="bg-[#fe4d00] font-bold text-2xl bg-clip-text text-transparent">Score9</span></Link>
+                            <div className="bg-zinc-100 rounded-full p-2 px-5 font-[500]">
+                                 <CountDown seconds={countdown} setProgress={setProgress}  />
+                            </div>
+                <Link href="/dashboard"><span className="bg-black  text-md bg-clip-text text-transparent">Close</span></Link>
             </div>
-            <div className="flex flex-col">
-                <h2 className="font-[600] text-xl">{title}</h2>
-            <p>{description}</p>
             </div>
+            <progress className="progress progress-error h-1 w-full absolute b-[-10px] bg-transparent" value={progress} max={100}></progress>
         </div>
+         
     )
 }
 

@@ -11,14 +11,18 @@ const QuestionCard = ({
  const router = useRouter();
 
     return (
-        <div className="flex card bg-base-100 shadow-md border border-zinc-100 " >
-            <div className="card-body">
-            <h2 className="card-title text-lg font-[500] truncate">#{question?.id} {question?.title}</h2>
-            <p className="truncate">{question.question}</p>
-            <div className="card-actions justify-start mt-2">
-            <button onClick={(() => router.push(`${url}/${question.id}`))} className="flex flex-row space-x-2 justify-center  items-center 0 p-2 rounded-md bg-red-400 text-white text-sm px-4">
+        <div className="flex card rounded-sm  shadow-none border-none border-zinc-200 border-b-300 bg-[#f6f4ee]" >
+            <div className="card-body flex-row justify-between items-center">
+            <div className="flex flex-row w-[90%] justify-start ">
+                <div className="bg-zinc-200 rounded-full p-4 w-14 items-center justify-center mb-2 font-[500]">#{question?.id}</div>
+                <h2 className=" text-md font-[500] "> {question?.question}</h2>
+            <p className="text-sm truncate">{question.title}</p>
+                        <div className="card-actions justify-start mt-2">
+
+            </div>
+            <button onClick={(() => router.push(`${url}/${question.id}`))} className="flex flex-row space-x-2 justify-center  items-center 0 p-2 rounded-full bg-white border border-black text-black font-[600] text-sm px-4 w-[140px]">
                 <SparklesIcon className="w-4 h-4" />
-                <span >Start Test</span>
+                <span>Start Test</span>
             </button>
             </div>
         </div>

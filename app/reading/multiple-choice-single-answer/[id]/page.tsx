@@ -24,14 +24,11 @@ const MultipleChoiceMultipleAnswers = () => {
 
     return !isLoading && (
       <main>
-        <QuestionHeader
-            initial="MC"
-            description="You will hear a short report. Write a summary for a fellow student who was not present. You should write 50-70 words. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points presented in the lecture."
-            title=""
-        />
-        <div className="mt-10">
-            <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
-            {<CountDown seconds={70} />}
+        <QuestionHeader  countdown={90} />
+        <div className="w-full lg:max-w-6xl m-auto mt-10">
+          
+        <div className="mt-20">
+            <h2 className="text-lg font-[600]">#{params.id} {SingleQuestion?.title}</h2>
             <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
                  <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
             </div>
@@ -49,6 +46,8 @@ const MultipleChoiceMultipleAnswers = () => {
                 }
             </TextContentArea>
         </div>
+        </div>
+       
         <QuestionFooter currentPage={params.id} />
      </main>
     )

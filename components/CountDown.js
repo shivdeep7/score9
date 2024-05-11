@@ -2,11 +2,12 @@
 import { current } from "@reduxjs/toolkit";
 import { useEffect, useRef, useState } from "react";
 
-const CountDown = ({ seconds }) => {
+const CountDown = ({ seconds, setProgress }) => {
   const [currentSeconds, setCurrentSeconds] = useState(seconds % 60);
   const [currentMinutes, setCurrentMinutes] = useState(
     Math.floor(seconds / 60)
   );
+  const [totalSeconds, setTotalSeconds] = useState(0);
   const intervalId = useRef();
 
   useEffect(() => {
@@ -19,6 +20,9 @@ const CountDown = ({ seconds }) => {
         // If the current seconds is not 0 reduce the second
         setCurrentSeconds((state) => state - 1);
       }
+      const secondsNew = totalSeconds + 1;
+      setTotalSeconds(secondsNew);
+      setProgress((secondsNew / seconds) * 100);
     }, 1000);
 
     return () => clearInterval(intervalId.current);

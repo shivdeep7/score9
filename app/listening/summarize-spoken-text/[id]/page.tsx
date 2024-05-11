@@ -36,7 +36,7 @@ const SummariseSpokenText = () => {
     }
 
     return !isLoading && (
-      <main >
+      <main className="w-full lg:max-w-6xl">
         <QuestionHeader
             initial="ST"
             description="You will hear a short report. Write a summary for a fellow student who was not present. You should write 50-70 words. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points presented in the lecture."

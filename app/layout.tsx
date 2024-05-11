@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
+import { Poppins, Epilogue, Literata } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import '@/utils/axios'
@@ -8,13 +8,15 @@ import { createTheme, MantineProvider } from '@mantine/core';
 import '@mantine/core/styles.css';
 
 const theme = createTheme({
-   fontFamily: "Poppins",
+   fontFamily: "Epilogue",
     primaryColor: 'gray',
     primaryShade: 9
   });
 
 
-const poppins = Poppins({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+export const poppins = Poppins({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+export const epilogue = Epilogue({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+export const literata = Literata({ subsets: ["latin"], weight: ["200", "300", "400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -28,11 +30,11 @@ children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body className={`bg-gray-50  text-gray-800 ${poppins.className}`}>
+      <body className={`  text-gray-800 ${poppins.className}`}>
         <ReduxProvider>
           <MantineProvider theme={theme}>
             <Header />
-            <div className="flex flex-col min-h-screen mt-12 bg-gray-50 m-auto w-full p-5 lg:max-w-7xl">
+            <div className="flex flex-col min-h-screen   m-auto w-full">
             {children}
             </div>
           </MantineProvider>
