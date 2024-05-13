@@ -1,4 +1,3 @@
-import { QuestionTypesProps } from "@/features/listening/listeningSlice";
 import { BaseApiTypes } from "@/types/listening";
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import { useRouter } from 'next/navigation'
@@ -15,7 +14,7 @@ const QuestionCard = ({
             <div className="card-body flex-row justify-between items-center">
             <div className="flex flex-col w-[90%] justify-start ">
                 <div className="bg-zinc-200 rounded-full p-4 w-14 items-center justify-center mb-2 font-[500]">#{question?.id}</div>
-                <h2 className=" text-md font-[500] "> {question?.question}</h2>
+                <h2 className=" text-md font-[500] truncate"> {question?.question}</h2>
             <p className="text-sm truncate">{question.title}</p>
                         <div className="card-actions justify-start mt-2">
 

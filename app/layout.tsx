@@ -34,7 +34,8 @@ children: React.ReactNode;
         <ReduxProvider>
           <MantineProvider theme={theme}>
             <Header />
-            {children}
+
+              {children}
           </MantineProvider>
           
         </ReduxProvider>

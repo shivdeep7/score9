@@ -91,6 +91,16 @@ export interface ApiResponseType {
 }
 
 
+// Action to submit a answer and get results
+export const readingSubmitAnswer = createAsyncThunk("reading/submitAnswer", async (data, { rejectWithValue } ) => {
+    try {
+        
+    } catch (error: any) {
+         const message = e.response?.data?.message || e.toString() || e.message;
+        return rejectWithValue(message);
+    }
+})
+
 // Get the list of reading questions
 export const readingQuestionList = createAsyncThunk<ApiResponseType, ApiRequestType,{ rejectValue: string }>("reading/QuestionsList", async (request, { rejectWithValue }) => {
     try {

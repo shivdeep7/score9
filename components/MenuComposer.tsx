@@ -28,7 +28,7 @@ const MenuContent = (item: SubMenuTypes) => {
         className="flex flex-row items-center space-x-1 text-sm font-[400]"
       >
        
-        <span className="text-md font-[poppins] font-[500]">{item.name}</span>
+        <span className="text-md font-[poppins] font-[600]">{item.name}</span>
         {item.AI && <Ai />}
       </div>
       {item.subMenu && (
