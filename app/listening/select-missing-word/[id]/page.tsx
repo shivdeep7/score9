@@ -1,5 +1,4 @@
 'use client';
-import CountDown from "@/components/CountDown.js";
 import QuestionHeader from "@/components/QuestionHeader";
 import QuestionFooter from "@/components/QuestionsFooter";
 import TextContentArea from "@/components/TestContentArea";
@@ -8,7 +7,7 @@ import { AppUseDispatch, AppUseSelector } from "@/store/hook";
 import { useParams } from 'next/navigation'
 import { useEffect } from "react";
 
-const SummariseSpokenText = () => {
+const SelectMissigWord = () => {
 
     const params = useParams<{id: string}>();
     const dispatch =  AppUseDispatch();
@@ -17,9 +16,9 @@ const SummariseSpokenText = () => {
     useEffect(() => {
 
         dispatch(SingleQuestionData({
-            uri:  `/listening/highlight-correct-summary/${params.id}`,
+            uri:  `/listening/select-missing-word/${params.id}`,
             id: params.id,
-            name: "HighlightCorrectSummary"
+            name: "SelectMissingWord"
         }))
     }, [params.id])
 
@@ -34,7 +33,7 @@ const SummariseSpokenText = () => {
             </div>
          <p className="text-lg font-[500] my-4">Listen to the given audio and choose the correct summary.</p>
                 { 
-                   SingleQuestion?.summaries?.map((current: HighlightCorrectSummaryTypes, index: number) => {
+                   SingleQuestion?.options?.map((current: HighlightCorrectSummaryTypes, index: number) => {
                     return (
                         <TextContentArea key={index} className="space-x-3 mb-3 cursor-pointer ">
                                     <input type="radio" name="answer" />
@@ -49,4 +48,4 @@ const SummariseSpokenText = () => {
     )
 }
 
-export default SummariseSpokenText;
+export default SelectMissigWord;

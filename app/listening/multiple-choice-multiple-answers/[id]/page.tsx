@@ -41,15 +41,11 @@ const SummariseSpokenText = () => {
     }
 
     return !isLoading && (
-      <main>
+   <main>
         <QuestionHeader
-            initial="MC"
-            description="You will hear a short report. Write a summary for a fellow student who was not present. You should write 50-70 words. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points presented in the lecture."
-            title=""
+            countdown={70}
         />
-        <div className="mt-10">
-            <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
-            {<CountDown seconds={70} />}
+        <div className="w-full lg:max-w-6xl m-auto mt-20">
             <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
                  <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
             </div>

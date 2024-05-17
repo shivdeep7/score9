@@ -1,8 +1,6 @@
 import {
   createSlice,
-  createAsyncThunk,
-  AsyncThunkPayloadCreator,
-  AsyncThunk,
+  createAsyncThunk
 } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { QuestionsPropsTypes } from "./listeningService";
@@ -13,12 +11,20 @@ import {
   MultipleChoiceMultipleAnswers,
 } from "../../types/listening";
 
+
+export interface HighlightCorrectSummaryTypes extends BaseApiTypes {
+  summaries: 
+    {
+      options: string
+    }[]
+}
+
 export type QuestionTypesProps = {
   ListeningSummarizeSpokenText?: ListeningSummarizeSpokenText[];
   MultipleChoiceMultipleAnswers?: MultipleChoiceMultipleAnswers[];
   MultipleChoiceSingleAnswer?: MultipleChoiceMultipleAnswers[];
   FillIntheBlanks?: MultipleChoiceMultipleAnswers[];
-  HighlightCorrectSummary?: MultipleChoiceMultipleAnswers[];
+  HighlightCorrectSummary?: HighlightCorrectSummaryTypes[];
   SelectMissingWord?: MultipleChoiceMultipleAnswers[];
   HighlightIncorrectWords?: MultipleChoiceMultipleAnswers[];
   WriteFromDictation?: MultipleChoiceMultipleAnswers[];

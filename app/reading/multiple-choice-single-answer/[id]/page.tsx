@@ -24,11 +24,9 @@ const MultipleChoiceMultipleAnswers = () => {
 
     return !isLoading && (
       <main>
-        <QuestionHeader  countdown={90} />
-        <div className="w-full lg:max-w-6xl m-auto mt-10">
-          
-        <div className="mt-20">
-            <h2 className="text-lg font-[600]">#{params.id} {SingleQuestion?.title}</h2>
+        <QuestionHeader countdown={70} />
+        <div className="mt-10">
+            <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
             <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
                  <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
             </div>
@@ -46,8 +44,6 @@ const MultipleChoiceMultipleAnswers = () => {
                 }
             </TextContentArea>
         </div>
-        </div>
-       
         <QuestionFooter currentPage={params.id} />
      </main>
     )

@@ -9,7 +9,8 @@ import { useParams, useRouter } from 'next/navigation';
 import { Pagination } from '@mantine/core';
 import { QuestionsPropsTypes } from '@/features/listening/listeningService';
 import { PaginationComposer } from '@/utils/PaginationComposer';
-
+import { Tabs } from '@mantine/core';
+import { literata } from '@/app/layout';
 
 
 
@@ -66,12 +67,14 @@ const MultipleChoice = () => {
     const router = useRouter();
     
      const dispatch = AppUseDispatch();
+
      
      
      const { isLoading, isError, isSuccess, QuestionsList } = AppUseSelector(state => {
         return state.listening;
      })
      const params = useParams<{"type": string; page: string}>();
+       const [activeTab, setActiveTab] = useState<string>(params.type as string)
 
    const totalPagesMemo = useMemo(() => {
     return PaginationComposer(QuestionsList, params, MapQuestionsTypesToUrl)
@@ -79,38 +82,81 @@ const MultipleChoice = () => {
 
 
    useEffect(() => {
+        setActiveTab(params.type)
         // Get the the list of questions
           dispatch(ListeningQuestionsList(MapQuestionsTypesToUrl[params.type]))
         
-    }, [])
+    }, [params.type])
 
     useEffect(() => {
 
     }, [params.page])
 
-    return !isLoading && (
-     <main>
-
-            <div className="flex items-center  mb-8">
-                    <span className="text-2xl font-[600]">Listening - {MapQuestionsTypesToUrl[params.type]["title"]}</span>
+     return !isLoading && (
+        <main>
+             <div className="flex items-center  w-full lg:max-w-6xl m-auto">
+             <h2 className={`text-3xl font-[500] my-5 mb-4  m-auto w-full lg:max-w-7xl ${literata.className}`}>Reading - {MapQuestionsTypesToUrl[params.type]?.["title"]}</h2>
+                            
             </div>
-     <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                
-            {
-             
-              QuestionsList?.[MapQuestionsTypesToUrl[params.type]["name"]]?.slice(totalPagesMemo.start, totalPagesMemo.end).map((current) => {
-                    return (
-                            <QuestionCard key={current.id} question={current} url={MapQuestionsTypesToUrl[params.type].uri} />
-                    )
-                })
-            }
+              <Tabs color="orange" defaultValue="gallery" className="w-full m-auto mt-5"  value={activeTab} onChange={(v) => router.replace(`/listening/practice/${v}/1`)}>
+          
+                <Tabs.List>
+                  <div  className="w-full lg:max-w-6xl m-auto flex flex-row">
+                     <Tabs.Tab value="summerize-spoken-types"  >
+          Summerize
+        </Tabs.Tab>
+        <Tabs.Tab value="multiple-choice">
+          Multiple Choice
+        </Tabs.Tab>
+        <Tabs.Tab value="multiple-choice-single-answer">
+          Single answer
+        </Tabs.Tab>
+       
+        <Tabs.Tab value="fill-in-the-blanks">
+          Fill in the blanks
+        </Tabs.Tab>
+         
+         <Tabs.Tab value="highlist-correct-summary">
+         Hightlight Correct
+        </Tabs.Tab>
+         <Tabs.Tab value="select-missing-word">
+         Select Missing Word
+        </Tabs.Tab>
+         <Tabs.Tab value="highlight-incorrect-words">
+         Hightlight incorrect
+        </Tabs.Tab>
+         <Tabs.Tab value="write-form-dictation">
+         Write from Diciation
+        </Tabs.Tab>
+                  </div>
+      </Tabs.List>
+      <Tabs.Panel  value={activeTab}>
+         <div className="mt-6 w-full lg:max-w-6xl m-auto mt-10">
             
+           <div className="flex flex-row space-x-6">
+            <div>
+                         
+            <h3 className="text-2xl font-bold mt-5">Practice Questions</h3>
+              <h3 className="text-lg font-light mb-5">Choose from the practice questions and learn on your pace.</h3>
+            <div className="grid grid-cols-3 gap-4 " >
+              {  QuestionsList?.[MapQuestionsTypesToUrl[params.type].name]?.slice(totalPagesMemo.start, totalPagesMemo.end).map((question) => {
+                  return (
+                      <QuestionCard key={question.id} url={MapQuestionsTypesToUrl[params.type].uri} question={question} />
+                  )
+              })}
             </div>
-            <Pagination  className="mt-8" value={Number(params.page)} total={totalPagesMemo.pages} onChange={(value) => {
+            </div>
+             
+           
+           </div>
+          </div>
+           <Pagination  className="mt-8 w-full lg:max-w-6xl m-auto" value={Number(params.page)} total={totalPagesMemo.pages} onChange={(value) => {
               router.push(`${value}`)
             }}/>
-            
-      </main>
+      </Tabs.Panel>
+    </Tabs>
+        
+        </main>
     )
 }
 

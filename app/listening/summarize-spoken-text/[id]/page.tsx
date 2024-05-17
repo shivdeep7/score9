@@ -36,15 +36,13 @@ const SummariseSpokenText = () => {
     }
 
     return !isLoading && (
-      <main className="w-full lg:max-w-6xl">
+      <main>
         <QuestionHeader
-            initial="ST"
-            description="You will hear a short report. Write a summary for a fellow student who was not present. You should write 50-70 words. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points presented in the lecture."
-            title="Summarise Spoken Text"
+            countdown={70}
         />
-        <div className="mt-10">
+        <div className="w-full lg:max-w-6xl m-auto mt-20">
             <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
-            {<CountDown seconds={70} />}
+
             <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
                  <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
             </div>
@@ -54,9 +52,10 @@ const SummariseSpokenText = () => {
             <Textarea style={{border: 0}}className="w-full resize-x outline-none border-none mt-5" onChange={(e) => {
                 hanldeTextAreaChange(e)
             }}></Textarea>
-        </div>
-         <span className="flex my-4">Word Count: {wordCount}</span>
+                 <span className="flex my-4">Word Count: {wordCount}</span>
                               <hr />
+        </div>
+    
 
         <QuestionFooter currentPage={params.id} disabled={wordCount ? false : true } />
      </main>

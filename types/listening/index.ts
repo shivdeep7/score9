@@ -11,6 +11,7 @@ export interface BaseApiTypes {
     question?: string;
     options?: any;
      paragraphs?: any
+     summaries?: any
 }
 
 export interface MultipleChoiceOptionsTypes {
