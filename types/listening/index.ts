@@ -24,6 +24,17 @@ export interface MultipleChoiceOptionsTypes {
     question_id: number;
 }
 
+
+export interface ApiSubmitResponseTypes {
+    "id": number;
+    "userId": number;
+    "questionId": number;
+    "answers": string[];
+    "score": number;
+    "createdAt": number;
+"updatedAt": number;
+}
+
 export interface ListeningSummarizeSpokenText extends BaseApiTypes { 
 
 }

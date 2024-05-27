@@ -3,24 +3,48 @@ import CountDown from "@/components/CountDown.js";
 import QuestionHeader from "@/components/QuestionHeader";
 import QuestionFooter from "@/components/QuestionsFooter";
 import TextContentArea from "@/components/TestContentArea";
-import {  readingSingleQuestionData } from "@/features/reading/readingSlice";
+import {  readingSingleQuestionData, readingSubmitAnswer, resetResponse } from "@/features/reading/readingSlice";
 import { AppUseDispatch, AppUseSelector } from "@/store/hook";
 import { MultipleChoiceOptionsTypes } from "@/types/listening";
 import { useParams } from 'next/navigation'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+
+const INCORRECT_ANSWER_CLASS = "bg-red-100 ";
 
 const MultipleChoiceMultipleAnswers = () => {
 
     const params = useParams<{id: string}>();
     const dispatch =  AppUseDispatch();
-    const { isLoading, isError, SingleQuestion } = AppUseSelector(state => state.reading)
+    const { isLoading, isError, SingleQuestion, SubmitResponse } = AppUseSelector(state => state.reading)
+    const [answer, setAnswer] = useState<string[]>([])
 
-    useEffect(() => {
+    useEffect((): any => {
 
         dispatch(readingSingleQuestionData({
             uri:  `/reading/multiple-choice-multiple-answers/${params.id}`,
         }))
+
+       return () =>  dispatch(resetResponse())
     }, [params.id])
+
+
+    const handleAnswerSubmit = () => {
+        dispatch(readingSubmitAnswer({
+            uri:  `/reading/submit-multiple-choice-single-answer`,
+            questionId: Number(params.id),
+            userId:  11, 
+            answer: answer
+        }))
+    }
+
+    const handleAnswerChange = (option: string) => {
+        dispatch(resetResponse())
+        let listSelectedAnswers = [...answer];
+        const index = listSelectedAnswers.indexOf(option); 
+        index !== -1 ? listSelectedAnswers.splice(index, 1) : listSelectedAnswers.push(option)
+        setAnswer(listSelectedAnswers)
+    }
 
     return !isLoading && (
       <main>
@@ -36,7 +60,8 @@ const MultipleChoiceMultipleAnswers = () => {
                 {
                     SingleQuestion?.options?.map((current: MultipleChoiceOptionsTypes) => {
                         return (
-                            <div className="p-2 space-x-1">
+
+                            <div className={`p-2 space-x-1 ${SubmitResponse !== null && (current.correct ? "bg-green-100" : SubmitResponse?.score === 0 && answer.indexOf(current.options) !== -1 && "bg-red-100") }`} onChange={() => handleAnswerChange(current?.options) } key={current?.options}>
                                 <input type="checkbox" />
                                 <span>{current?.options}</span>
                             </div>
@@ -45,7 +70,7 @@ const MultipleChoiceMultipleAnswers = () => {
                 }
             </TextContentArea>
         </div>
-        <QuestionFooter currentPage={params.id} />
+        <QuestionFooter currentPage={params.id} disabled={answer.length ? false : true} onSubmit={handleAnswerSubmit}/>
      </main>
     )
 }

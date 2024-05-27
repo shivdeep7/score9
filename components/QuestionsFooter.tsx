@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 
-const QuestionFooter = ({currentPage, disabled, submit = true}: {currentPage: string, disabled?: boolean, submit?: boolean}) => {
+const QuestionFooter = ({currentPage,  disabled, submit = true, onSubmit}: {currentPage: string,  disabled?: boolean, submit?: boolean, onSubmit?: () => void }) => {
 
         const router = useRouter(); 
 
@@ -25,7 +25,7 @@ const QuestionFooter = ({currentPage, disabled, submit = true}: {currentPage: st
                 }
             </div>
                  
-              <div className='flex space-x-3' >
+              <div className='flex space-x-3' onClick={onSubmit}>
                  {submit &&  <button className="p-3 px-5 bg-[#fe4d00]  rounded-full  text-white font-[600] flex space-x-2 disabled:opacity-25" disabled={disabled}>
                     <SparklesIcon  className="h-6 w-6" />
                     <span>Submit</span>

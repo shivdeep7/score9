@@ -1,5 +1,6 @@
-import { BaseApiTypes } from "@/types/listening";
+import { ApiSubmitResponseTypes, BaseApiTypes } from "@/types/listening";
 import { AxiosGetRequest } from "@/utils/AxiosGetRequest";
+import { AxiosSubmitAnswerRequest, AxiosSubmitQuetionPropsTypes } from "@/utils/AxiosSubmitAnswerRequest";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit"
 
 
@@ -66,7 +67,8 @@ interface initalStateTypes {
     isSuccess: boolean,
     message: string | undefined,
     QuestionsList: QuestionListType | null,
-    SingleQuestion: SingleQuestionType | null
+    SingleQuestion: SingleQuestionType | null,
+    SubmitResponse: ApiSubmitResponseTypes | null
 }
 
 
@@ -77,6 +79,7 @@ const initialState: initalStateTypes = {
     message: "",
     QuestionsList: null,
     SingleQuestion: null,
+    SubmitResponse: null
 }
 
 // Create a serivce to get the list of the summary questions 
@@ -92,10 +95,11 @@ export interface ApiResponseType {
 
 
 // Action to submit a answer and get results
-export const readingSubmitAnswer = createAsyncThunk("reading/submitAnswer", async (data, { rejectWithValue } ) => {
+export const readingSubmitAnswer = createAsyncThunk<ApiSubmitResponseTypes, AxiosSubmitQuetionPropsTypes, {rejectValue: string}>("reading/submitAnswer", async (request, { rejectWithValue } ) => {
     try {
-        
-    } catch (error: any) {
+        const response = AxiosSubmitAnswerRequest<ApiSubmitResponseTypes>(request);
+        return response; 
+    } catch (e: any) {
          const message = e.response?.data?.message || e.toString() || e.message;
         return rejectWithValue(message);
     }
@@ -134,6 +138,12 @@ const readingSlice = createSlice({
     reducers: {
         reset: (state) => {
             return initialState
+        },
+        resetResponse: (state) => {
+            return {
+                ...state,
+                SubmitResponse: null
+            }
         }
     },
     extraReducers: builder => {
@@ -165,11 +175,24 @@ const readingSlice = createSlice({
             state.isSuccess = false 
             state.message = action.payload;
         })
+        .addCase(readingSubmitAnswer.pending, (state, action) => {
+            state.isLoading = true
+        }).addCase(readingSubmitAnswer.fulfilled, (state, action: PayloadAction<ApiSubmitResponseTypes>) => {
+            state.isLoading = false
+            state.isError = false
+            state.isSuccess = true 
+            state.SubmitResponse = action.payload;
+        }).addCase(readingSubmitAnswer.rejected, (state, action: PayloadAction<string | undefined>) => {
+            state.isLoading = false 
+            state.isError = true 
+            state.isSuccess = false 
+            state.message = action.payload;
+        })
     }
 })
 
 
 
 
-export const { reset } = readingSlice.actions;
+export const { reset, resetResponse } = readingSlice.actions;
 export default readingSlice.reducer;
