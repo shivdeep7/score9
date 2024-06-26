@@ -7,7 +7,7 @@ const Dashboard = () => {
             <div className="h-[500px] bg-gradient-to-b from-indigo-300/20 to-indigo-50/20 w-full absolute top-0 z-0 w-full"></div>
              <div className="z-10 m-auto w-full lg:max-w-6xl">
               <div className=" mt-10 text-center leading-[100px] flex flex-col items-center">
-                                <h2 className={`text-6xl font-[800] my-5 mb-3  ${epilogue.className}`}>Welcome to Score9, <br/> Let's get <span className="bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400 bg-clip-text text-transparent">learning</span>.</h2>            
+                                <h2 className={`text-6xl font-[800] my-5 mb-3  ${epilogue.className}`}>Welcome to Score9, <br/> Let&apos;s get <span className="bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400 bg-clip-text text-transparent">learning</span>.</h2>            
                                 <h3 className={`text-xl font-[500] my-5 mb-3  w-full lg:max-w-2xl ${epilogue.className}`}>Our clients are our partners, we work with them closely to create world class products and deliver top-notch services.</h3>            
 
                   <div className="flex space-x-2 mt-5">

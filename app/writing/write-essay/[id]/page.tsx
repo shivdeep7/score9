@@ -36,11 +36,11 @@ const WrittenEssay = () => {
 
     return !isLoading && (
         <main>
-            <QuestionHeader initial="SW" title="Written Essay" description="Read a description of a situation. Then write an essay about the situation. You will have 9 minutes. You should aim to write at least 100 words. Write using complete sentences.
-"  />
+            {/* <QuestionHeader initial="SW" title="Written Essay" description="Read a description of a situation. Then write an essay about the situation. You will have 9 minutes. You should aim to write at least 100 words. Write using complete sentences.
+"  /> */}
             <div className="mt-3">
                 <h1 className="text-xl font-[500] my-4">#{params.id} {SingleQuestion?.title}</h1>
-                {<CountDown seconds={1200} />}
+                {<CountDown seconds={1200} setProgress={()=>{}} />}
                 <TextContentArea className="my-3">
                    {SingleQuestion?.question}
                 </TextContentArea>

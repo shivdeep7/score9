@@ -19,6 +19,11 @@ export interface HighlightCorrectSummaryTypes extends BaseApiTypes {
     }[]
 }
 
+export type QuestionsDataType= {
+  questions: QuestionTypesProps;
+  totalPages : number;
+}
+
 export type QuestionTypesProps = {
   ListeningSummarizeSpokenText?: ListeningSummarizeSpokenText[];
   MultipleChoiceMultipleAnswers?: MultipleChoiceMultipleAnswers[];
@@ -40,6 +45,7 @@ export type ListeningStateProps = {
   isError: boolean;
   isSuccess: boolean;
   message: string;
+  totalPages: number;
   QuestionsList: QuestionTypesProps | null;
   SingleQuestion: SingleQuestionType | null;
 };
@@ -50,12 +56,13 @@ const initialState: ListeningStateProps = {
   isSuccess: false,
   message: "",
   QuestionsList: null,
+  totalPages: 0,
   SingleQuestion: null,
 };
 
 type ListApiResponse = {
   name: QuestionsListNameType;
-  data: QuestionTypesProps;
+  data: QuestionsDataType;
 };
 
 // Get the list of questions from the database
@@ -63,10 +70,10 @@ export const ListeningQuestionsList = createAsyncThunk<
   ListApiResponse,
   QuestionsPropsTypes,
   { rejectValue: string }
->("listening/ListeningQuestionsList", async (request, { rejectWithValue }) => {
+>("listening/ListeningQuestionsList", async (request , { rejectWithValue }) => {
   try {
     // Get the list of the questions
-    const response = await AxiosGetRequest<QuestionTypesProps>(request.uri);
+    const response = await AxiosGetRequest<QuestionsDataType>(request.uri);
 
     const result = {
       data: response,
@@ -116,6 +123,7 @@ const listeningSlice = createSlice({
       return {
         ...initialState,
         QuestionsList: state.QuestionsList,
+        totalPages: state.totalPages,
       };
     },
   },
@@ -132,8 +140,9 @@ const listeningSlice = createSlice({
           state.isSuccess = true;
           state.QuestionsList = {
             ...state.QuestionsList,
-            [action.payload.name]: action.payload.data,
+            [action.payload.name]: action.payload.data.questions,
           };
+          state.totalPages = action.payload.data.totalPages;
         },
       )
       .addCase(ListeningQuestionsList.rejected, (state) => {

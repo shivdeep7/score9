@@ -24,7 +24,7 @@ const SummariseSpokenText = () => {
             id: params.id,
             name: "ListeningSummarizeSpokenText"
         }))
-    }, [params.id])
+    }, [params.id, dispatch])
 
     const hanldeTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
        const value = e.target.value;
@@ -44,7 +44,7 @@ const SummariseSpokenText = () => {
             <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
 
             <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
-                 <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
+                 <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21${SingleQuestion?.audioUrl}`} controls />
             </div>
             <TextContentArea className="flex mt-10 p-0">
                 Listen to the given audio above and write the summary in 50-70 words.

@@ -3,7 +3,7 @@ import CountDown from "@/components/CountDown.js";
 import QuestionHeader from "@/components/QuestionHeader";
 import QuestionFooter from "@/components/QuestionsFooter";
 import TextContentArea from "@/components/TestContentArea";
-import { readingSingleQuestionData } from "@/features/reading/readingSlice";
+import { readingSingleQuestionData } from "@/features/Reading/readingSlice";
 import { AppUseDispatch, AppUseSelector } from "@/store/hook";
 import { MultipleChoiceOptionsTypes } from "@/types/listening";
 import { useParams } from 'next/navigation';
@@ -23,7 +23,7 @@ const ReadingReOrderParagraphs = () => {
         dispatch(readingSingleQuestionData({
             uri:  `/reading/re-order-paragraphs/${params.id}`,
         }))
-    }, [params.id])
+    }, [params.id, dispatch])
 
     useEffect(() => {
         setDragList.setState(SingleQuestion?.paragraphs)
@@ -35,9 +35,6 @@ const ReadingReOrderParagraphs = () => {
        <QuestionHeader countdown={70} />
         <div className="mt-20 w-full lg:max-w-6xl m-auto mb-[200px]">
             <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
-            <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
-                 <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
-            </div>
 
                
                 <span className="text-lg font-[500] m-2 mb-3 ">{SingleQuestion?.question}</span>
