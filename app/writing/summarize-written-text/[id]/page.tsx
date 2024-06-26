@@ -44,10 +44,10 @@ const SummerizeWrittenTest = () => {
 
     return !isLoading && (
         <main>
-            <QuestionHeader initial="SW" title="Summerize Written test" description="Read the passage below. Summarize the passage using between 25 and 50 words. Type your response in the box at the bottom of the screen. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points in the passage."  />
+            {/* <QuestionHeader initial="SW" title="Summerize Written test" description="Read the passage below. Summarize the passage using between 25 and 50 words. Type your response in the box at the bottom of the screen. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points in the passage."  /> */}
             <div className="mt-3">
                 <h1 className="text-xl font-[500] my-4">#{params.id} {SingleQuestion?.title}</h1>
-                {<CountDown seconds={1200} />}
+                {<CountDown seconds={1200} setProgress={()=>{}}/>}
                 <TextContentArea className="my-3">
                    {SingleQuestion?.question}
                 </TextContentArea>

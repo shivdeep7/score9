@@ -67,6 +67,7 @@ interface initalStateTypes {
     isSuccess: boolean,
     message: string | undefined,
     QuestionsList: QuestionListType | null,
+    totalPages: number,
     SingleQuestion: SingleQuestionType | null,
     SubmitResponse: ApiSubmitResponseTypes | null
 }
@@ -78,6 +79,7 @@ const initialState: initalStateTypes = {
     isSuccess: false, 
     message: "",
     QuestionsList: null,
+    totalPages:0,
     SingleQuestion: null,
     SubmitResponse: null
 }
@@ -90,7 +92,12 @@ export interface ApiRequestType {
 
 export interface ApiResponseType {
     name: QuestionsListNameType
-    data: QuestionListType
+    data: ReadingQuestionsAPIData
+}
+
+export interface ReadingQuestionsAPIData {
+    questions: QuestionListType
+    totalPages: number
 }
 
 
@@ -108,7 +115,7 @@ export const readingSubmitAnswer = createAsyncThunk<ApiSubmitResponseTypes, Axio
 // Get the list of reading questions
 export const readingQuestionList = createAsyncThunk<ApiResponseType, ApiRequestType,{ rejectValue: string }>("reading/QuestionsList", async (request, { rejectWithValue }) => {
     try {
-        const response = await AxiosGetRequest<QuestionListType>(request.uri);
+        const response = await AxiosGetRequest<ReadingQuestionsAPIData>(request.uri);
         const result =  {
             data: response,
             name: request.name
@@ -155,8 +162,9 @@ const readingSlice = createSlice({
             state.isSuccess = true 
             state.QuestionsList = {
                 ...state.QuestionsList, 
-                [action.payload.name]: action.payload.data
+                [action.payload.name]: action.payload.data.questions
             }
+            state.totalPages = action.payload.data.totalPages;
         }).addCase(readingQuestionList.rejected, (state, action: PayloadAction<string | undefined>) => {
             state.isLoading = false 
             state.isError = true 

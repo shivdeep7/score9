@@ -3,7 +3,7 @@ import CountDown from "@/components/CountDown.js";
 import QuestionHeader from "@/components/QuestionHeader";
 import QuestionFooter from "@/components/QuestionsFooter";
 import TextContentArea from "@/components/TestContentArea";
-import {  readingSingleQuestionData, readingSubmitAnswer, resetResponse } from "@/features/reading/readingSlice";
+import {  readingSingleQuestionData, readingSubmitAnswer, resetResponse } from "@/features/Reading/readingSlice";
 import { AppUseDispatch, AppUseSelector } from "@/store/hook";
 import { MultipleChoiceOptionsTypes } from "@/types/listening";
 import { useParams } from 'next/navigation'
@@ -22,7 +22,7 @@ const MultipleChoiceMultipleAnswers = () => {
         dispatch(readingSingleQuestionData({
             uri:  `/reading/multiple-choice-single-answer/${params.id}`,
         }))
-    }, [params.id])
+    }, [params.id, dispatch])
 
     
     const handleAnswerSubmit = () => {
@@ -47,9 +47,6 @@ const MultipleChoiceMultipleAnswers = () => {
         <QuestionHeader countdown={70} />
         <div className="mt-10 w-full lg:max-w-6xl m-auto">
             <h2 className="text-2xl">#{params.id} {SingleQuestion?.title}</h2>
-            <div className="flex flex-1 w-full bg-[#f1f3f4] mt-5">
-                 <audio className="w-[30%]" src={`https://s3.ap-southeast-2.amazonaws.com/lamedia21/ptedata/ptemedia/${SingleQuestion?.audioUrl}`} controls />
-            </div>
             <TextContentArea className="mt-10">
                 <span className="text-lg font-[500] m-2 mb-3 ">{SingleQuestion?.question}</span>
                 {

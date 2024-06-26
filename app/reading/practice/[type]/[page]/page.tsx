@@ -49,7 +49,7 @@ const MapQuestionsTypesToUrl: MapQuestionsTypesToUrlTypes = {
 const ReadingQuestionList = () => {
 
     const dispatch = AppUseDispatch();
-    const { isLoading, isError, QuestionsList } = AppUseSelector(state => state.reading);
+    const { isLoading, isError, QuestionsList, totalPages } = AppUseSelector(state => state.reading);
     const params = useParams<{type: string, page: string}>();
     const router = useRouter();
     const [activeTab, setActiveTab] = useState<string>(params.type as string)
@@ -60,12 +60,8 @@ const ReadingQuestionList = () => {
          if ( MapQuestionsTypesToUrl[params.type] === undefined ) {
             return router.push("/")
          }
-        dispatch(readingQuestionList(MapQuestionsTypesToUrl[params.type]))
-    }, [params.type])
-
-      const totalPagesMemo = useMemo(() => {
-     return PaginationComposer(QuestionsList, params, MapQuestionsTypesToUrl)
-    }, [QuestionsList])
+        dispatch(readingQuestionList({...MapQuestionsTypesToUrl[params.type], uri: `${MapQuestionsTypesToUrl[params.type].uri}?page=${params.page}`}))
+    }, [params.type, dispatch, params.page, router])
 
 
 
@@ -108,7 +104,7 @@ const ReadingQuestionList = () => {
             <h3 className="text-2xl font-bold mt-5">Practice Questions</h3>
               <h3 className="text-lg font-light mb-5">Choose from the practice questions and learn on your pace.</h3>
             <div className="grid grid-cols-3 gap-4 " >
-              {  QuestionsList?.[MapQuestionsTypesToUrl[params.type].name]?.slice(totalPagesMemo.start, totalPagesMemo.end).map((question) => {
+              {  QuestionsList?.[MapQuestionsTypesToUrl[params.type].name]?.map((question) => {
                   return (
                       <QuestionCard key={question.id} url={MapQuestionsTypesToUrl[params.type].uri} question={question} />
                   )
@@ -119,7 +115,7 @@ const ReadingQuestionList = () => {
            
            </div>
           </div>
-           <Pagination  className="mt-8 w-full lg:max-w-6xl m-auto" value={Number(params.page)} total={totalPagesMemo.pages} onChange={(value) => {
+           <Pagination  className="mt-8 w-full lg:max-w-6xl m-auto" value={Number(params.page)} total={totalPages} onChange={(value) => {
               router.push(`${value}`)
             }}/>
       </Tabs.Panel>

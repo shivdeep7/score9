@@ -70,23 +70,20 @@ const MultipleChoice = () => {
 
      
      
-     const { isLoading, isError, isSuccess, QuestionsList } = AppUseSelector(state => {
+     const { isLoading, isError, isSuccess, QuestionsList,totalPages } = AppUseSelector(state => {
         return state.listening;
      })
      const params = useParams<{"type": string; page: string}>();
        const [activeTab, setActiveTab] = useState<string>(params.type as string)
 
-   const totalPagesMemo = useMemo(() => {
-    return PaginationComposer(QuestionsList, params, MapQuestionsTypesToUrl)
-   }, [QuestionsList])
-
 
    useEffect(() => {
         setActiveTab(params.type)
         // Get the the list of questions
-          dispatch(ListeningQuestionsList(MapQuestionsTypesToUrl[params.type]))
+        dispatch(ListeningQuestionsList({...MapQuestionsTypesToUrl[params.type], uri: `${MapQuestionsTypesToUrl[params.type].uri}?page=${params.page}`}))
+
         
-    }, [params.type])
+    }, [params.type, dispatch, params.page])
 
     useEffect(() => {
 
@@ -103,7 +100,7 @@ const MultipleChoice = () => {
                 <Tabs.List>
                   <div  className="w-full lg:max-w-6xl m-auto flex flex-row">
                      <Tabs.Tab value="summerize-spoken-types"  >
-          Summerize
+          Summarize
         </Tabs.Tab>
         <Tabs.Tab value="multiple-choice">
           Multiple Choice
@@ -139,7 +136,7 @@ const MultipleChoice = () => {
             <h3 className="text-2xl font-bold mt-5">Practice Questions</h3>
               <h3 className="text-lg font-light mb-5">Choose from the practice questions and learn on your pace.</h3>
             <div className="grid grid-cols-3 gap-4 " >
-              {  QuestionsList?.[MapQuestionsTypesToUrl[params.type].name]?.slice(totalPagesMemo.start, totalPagesMemo.end).map((question) => {
+              {  QuestionsList?.[MapQuestionsTypesToUrl[params.type].name]?.map((question) => {
                   return (
                       <QuestionCard key={question.id} url={MapQuestionsTypesToUrl[params.type].uri} question={question} />
                   )
@@ -150,7 +147,7 @@ const MultipleChoice = () => {
            
            </div>
           </div>
-           <Pagination  className="mt-8 w-full lg:max-w-6xl m-auto" value={Number(params.page)} total={totalPagesMemo.pages} onChange={(value) => {
+           <Pagination  className="mt-8 w-full lg:max-w-6xl m-auto" value={Number(params.page)} total={totalPages} onChange={(value) => {
               router.push(`${value}`)
             }}/>
       </Tabs.Panel>

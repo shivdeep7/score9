@@ -61,8 +61,6 @@ const SpeakingQuestionList = () => {
 
   useEffect(() => {
 
-  
-    
   dispatch(speakingQuestionList(currentQuestionType));
   }, [params.type, currentQuestionType, dispatch]);
 
